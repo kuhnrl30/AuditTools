@@ -1,0 +1,46 @@
+---
+title: "Process Mining"
+date: '`r format(Sys.Date(),"%B %d, %Y")`'
+output: rmarkdown::html_vignette
+layout: post
+htmlwidgets: false
+comments: true
+tags: [R]
+vignette: >
+    %\VignetteIndexEntry{LabCorp Location Data Workflow}
+    %\VignetteEngine{knitr::rmarkdown}
+    \usepackage[utf8]{inputenc}
+---
+
+```{r}
+load("data/canonicalexample.Rdata")
+
+# traces<- DataPrep(payday)
+
+traces<- DataPrep(Canonical)
+
+InitPairs<- MakePairs(traces)
+
+ClassedPairs<-ClassPairs(InitPairs, traces)
+
+Endpoints<- FindEndpoints(ClassedPairs)
+
+ShowGrid(ClassedPairs)
+
+Places<- FindPlaces(ClassedPairs)
+
+verts<-PrepVertices(Places, Endpoints)
+
+
+iPlot<- graph_from_data_frame(Places,
+                              directed=T,
+                              vertices=verts)
+
+
+plot(iPlot,
+     vertex.color=verts$color,
+     vertex.label.dist=2,
+     edge.arrow.size=.75)
+
+
+```
